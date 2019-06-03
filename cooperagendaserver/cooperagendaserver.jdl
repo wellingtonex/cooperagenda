@@ -1,0 +1,59 @@
+enum TipoTefeone {
+	RESIDENCIAL, COMERCIAL, CELULAR
+}
+
+entity Cidade {
+    nome String required
+}
+
+entity UnidadeFederativa {
+    sigla String required
+    nome String required
+}
+
+entity Cliente {
+    nome String required minlength(3) maxlength(10)
+    cpf String required unique minlength(11) maxlength(11)
+}
+
+entity Endereco {
+    cep String required minlength(8) maxlength(8)
+    logradouro String required
+    bairro String required
+    complemento String
+}
+
+entity Telefone {
+	numero String
+	tipo TipoTefeone
+}
+
+entity Email {
+	email String
+}
+
+relationship OneToOne {
+  Cliente{endereco} to Endereco{cliente}
+}
+
+relationship OneToMany {
+  Cliente{telefones} to Telefone{cliente}
+}
+
+relationship OneToMany {
+  Cliente{emails} to Email
+}
+
+relationship ManyToOne {
+  Endereco{cidade} to Cidade
+}
+
+relationship ManyToOne {
+  Cidade{uf} to UnidadeFederativa
+}
+
+dto * with mapstruct
+
+paginate Cliente with pagination
+
+service all with serviceImpl except Endereco, Telefone, Email
